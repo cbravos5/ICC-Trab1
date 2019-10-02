@@ -142,8 +142,29 @@ void contorno(int nx, int ny, double hx, double hy, struct matPent *A)
 }
 
 
-
-
-
-
-
+void out(struct matPent A, int nx, int ny, double hx, double hy, char *arq, int output){
+	FILE *pF;
+	if(output)
+		pF = fopen(arq, "w");
+	else
+		pF = stdout;
+	int i = 0;
+	fputs("##########\n",pF);
+	fputs("# Tempo método GS: ",pF);
+	fprintf(pF, "%f\n#\n", A.t);
+	fputs("# Norma L2 do resíduo\n",pF);
+	for(i = 0; i < (nx-2)*(ny-2); i++){
+		fprintf(pF, "# i = %d: %f\n", i, A.r[i]);
+	}
+	fputs("##########\n",pF);
+	for(i = 0; i < (nx-2); i++){
+		for(int j = 0; j < (ny-2); j++){
+			double ihx, jhy;
+			ihx = (i+1)*hx;
+			jhy = (j+1)*hy; 
+			fprintf(pF, "%f %f %f\n", ihx, jhy, A.X[(j + i*nx-2)]);
+		}
+	}
+	fputs("##########\n",pF);
+	fclose(pF);
+}
